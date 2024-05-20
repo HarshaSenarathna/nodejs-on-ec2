@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.AWS_EC2_PRIVATE_KEY}}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{secrets.AWS_EC2_USER}}@${{secrets.AWS_EC2_HOST}} << 'EOF'
+            cd /home/ec2-user/nodejs-on-ec2/
+            git pull origin main
+            npm install
+            pm2 restart server.js
+          EOF
