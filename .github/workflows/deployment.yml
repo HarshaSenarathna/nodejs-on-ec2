@@ -18,6 +18,7 @@ jobs:
           AWS_SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
           AWS_HOST_REPO: ${{ secrets.AWS_HOST_REPO }}
         run: |
-          chmod 600 $AWS_SSH_KEY
-          ssh -i $AWS_SSH_KEY $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && git pull"
-          ssh -i $AWS_SSH_KEY $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && npm install && pm2 restart server.js"
+          echo "$AWS_SSH_KEY" > private_key
+          chmod 600 private_key
+          ssh -i private_key $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && git pull"
+          ssh -i private_key $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && npm install && pm2 restart server.js"
