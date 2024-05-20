@@ -9,6 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: deploy to ec2
+      - name: Set up SSH key
         run: |
-          ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.EC2_DIR }} && git pull origin main && npm install && pm2 restart server.js"
+          echo "${{ secrets.SSH_KEY }}" > ssh_key
+          chmod 600 ssh_key
+
+      - name: Deploy to ec2
+        run: |
+          ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.EC2_DIR }} && git pull origin main && npm install && pm2 restart server.js"
