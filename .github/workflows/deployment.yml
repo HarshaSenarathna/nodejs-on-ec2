@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v2
       - name: Deploy to ec2
         run: |
-          ssh -i ${{ secrets.AWS_SSH_KEY }} ${{ secrets.AWS_SSH_USER }}@54.167.75.236 "cd ${{ secrets.AWS_HOST_REPO }} && git pull && npm install && pm2 start server.js"
+          ssh -i ${{ secrets.AWS_SSH_KEY }} ${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }} "cd ${{ secrets.AWS_HOST_REPO }} && git pull && npm install && pm2 start server.js"
