@@ -14,6 +14,11 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ssh_key
           chmod 600 ssh_key
 
+        # Debugging step: Test if connection works
+      - name: Test SSH connection
+        run: |
+          ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+
       - name: Deploy to ec2
         run: |
           ssh -i ssh_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.EC2_DIR }} && git pull origin main && npm install && pm2 restart server.js"
