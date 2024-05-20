@@ -20,5 +20,9 @@ jobs:
         run: |
           echo "$AWS_SSH_KEY" > private_key
           chmod 600 private_key
+          # Create the .ssh directory if it doesn't exist
+          mkdir -p ~/.ssh
+          # Add EC2 host key to known_hosts
+          ssh-keyscan $AWS_SSH_HOST >> ~/.ssh/known_hosts
           ssh -i private_key $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && git pull"
           ssh -i private_key $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && npm install && pm2 restart server.js"
