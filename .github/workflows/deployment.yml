@@ -12,5 +12,12 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
       - name: Deploy to ec2
+        env:
+          AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          AWS_SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          AWS_SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+          AWS_HOST_REPO: ${{ secrets.AWS_HOST_REPO }}
         run: |
-          ssh -i ${{ secrets.AWS_SSH_KEY }} ${{ secrets.AWS_SSH_USER }}@${{ secrets.AWS_SSH_HOST }} "cd ${{ secrets.AWS_HOST_REPO }} && git pull && npm install && pm2 start server.js"
+          chmod 600 $AWS_SSH_KEY
+          ssh -i $AWS_SSH_KEY $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && git pull"
+          ssh -i $AWS_SSH_KEY $AWS_SSH_USER@$AWS_SSH_HOST "cd $AWS_HOST_REPO && npm install && pm2 restart server.js"
