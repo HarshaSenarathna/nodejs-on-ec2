@@ -10,6 +10,10 @@ app.get('/about', (req, res) => {
   res.send('About Us');
 });
 
+app.get('/contact', (req, res) => {
+  res.send('Contact Us');
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
